@@ -1,56 +1,54 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:grabit/models/home_list_model.dart';
+import 'package:grabit/providers/get_all_stores_provider.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
 
-import '../assets.dart';
 import '../constants.dart';
 import '../data/data.dart';
+import '../utils/api.dart';
 import '../widgets/content_list.dart';
 
-
 class VendorProfile extends StatelessWidget {
-  final String title;
-
-
-  final String location;
-  final String phone;
-  const VendorProfile({Key? key, required this.title, required this.location, required this.phone}) : super(key: key);
+  final StoreModel store;
+  const VendorProfile({Key? key, required this.store}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: scaffoldbgColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       extendBodyBehindAppBar: true,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-
-          Expanded(
-            child: CustomScrollView(
+      body: ChangeNotifierProvider(
+          create: (context) => GetAllStoresProvider()..getStore(store.id),
+          builder: (context, child) {
+            final GetAllStoresProvider provider = context.watch();
+            if (provider.loading) {
+              return Center(child: CircularProgressIndicator());
+            } else if (provider.storeDetail == null) {
+              return SizedBox();
+            }
+            return CustomScrollView(
               physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverToBoxAdapter(
-                  child: Container(
-                    child: Image(
-                      image: AssetImage(Assets.resCover),
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.30,
-                      fit: BoxFit.cover,
-                    ),
+                  child: CachedNetworkImage(
+                    imageUrl: urls.storeImageUrl + store.logo,
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.30,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${title}, ${location}',
+                          '${store.region}, ${store.location}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
@@ -75,7 +73,7 @@ class VendorProfile extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children:  [
+                            children: [
                               Icon(
                                 Iconsax.clock,
                                 size: 25,
@@ -104,7 +102,7 @@ class VendorProfile extends StatelessWidget {
                                 size: 25,
                               ),
                               Text(
-                                '${location}',
+                                '${store.location}',
                                 style: TextStyle(
                                     color: primaryColor,
                                     fontWeight: FontWeight.bold),
@@ -126,7 +124,7 @@ class VendorProfile extends StatelessWidget {
                                 color: primaryColor,
                               ),
                               Text(
-                                '${phone}',
+                                '${store.phone}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: primaryColor,
@@ -138,16 +136,10 @@ class VendorProfile extends StatelessWidget {
                             ],
                           ),
                         ),
-
-
-
-
                       ],
                     ),
                   ),
                 ),
-
-
                 SliverToBoxAdapter(
                   child: ContentList(
                     title: 'Hot Deals',
@@ -173,10 +165,8 @@ class VendorProfile extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
+            );
+          }),
     );
   }
 }

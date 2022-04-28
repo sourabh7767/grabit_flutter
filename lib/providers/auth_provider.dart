@@ -127,7 +127,7 @@ class LoginProvider with ChangeNotifier {
                 responseData['errors'] ??
                 {
                   if (responseData['message'] != null)
-                    'error': responseData['message'].toString()
+                    'error': [responseData['message'].toString()]
                 };
 
             var errr = <String>[];

@@ -28,7 +28,8 @@ class _LoginPageState extends State<LoginPage> {
           builder: (context, child) {
             if (context.read<LoginProvider>().loggedIn) {
               WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-                Navigator.pushReplacementNamed(context, '/second');
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/second', (route) => false);
               });
             }
             if (context.watch<LoginProvider>().loading) {
@@ -251,54 +252,57 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
+                            Offstage(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 25.0, right: 15.0),
+                                        child: const Divider(
+                                          color: Colors.black,
+                                          height: 50,
+                                        )),
+                                  ),
+                                  const Text("OR"),
+                                  Expanded(
+                                    child: Container(
                                       margin: const EdgeInsets.only(
-                                          left: 25.0, right: 15.0),
+                                          left: 15.0, right: 25.0),
                                       child: const Divider(
                                         color: Colors.black,
                                         height: 50,
-                                      )),
-                                ),
-                                const Text("OR"),
-                                Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 15.0, right: 25.0),
-                                    child: const Divider(
-                                      color: Colors.black,
-                                      height: 50,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                            GestureDetector(
-                              onTap: () => Navigator.pushReplacementNamed(
-                                  context, "/second"),
-                              child: Container(
-                                height: 40,
-                                width: 300,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF4286F5),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Image.asset(Assets.google),
-                                      Text(
-                                        'Continue with Google',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 14,
-                                            color: Colors.white),
-                                      ),
-                                    ],
+                            Offstage(
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  height: 40,
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF4286F5),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Image.asset(Assets.google),
+                                        Text(
+                                          'Continue with Google',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 14,
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -306,32 +310,33 @@ class _LoginPageState extends State<LoginPage> {
                             const SizedBox(
                               height: 20,
                             ),
-                            GestureDetector(
-                              onTap: () => Navigator.pushReplacementNamed(
-                                  context, "/second"),
-                              child: Container(
-                                height: 40,
-                                width: 300,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                        color: Colors.black, width: 1)),
-                                child: Center(
-                                    child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Image.asset(Assets.fb),
-                                    Text(
-                                      'Continue with Facebook',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 14,
-                                          color: Colors.black),
-                                    ),
-                                  ],
-                                )),
+                            Offstage(
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  height: 40,
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                          color: Colors.black, width: 1)),
+                                  child: Center(
+                                      child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Image.asset(Assets.fb),
+                                      Text(
+                                        'Continue with Facebook',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                            color: Colors.black),
+                                      ),
+                                    ],
+                                  )),
+                                ),
                               ),
                             ),
                           ],

@@ -30,6 +30,7 @@ class _AccountScreenState extends State<AccountScreen> {
     _firstNameTextController.text = user.firstName ?? '';
     _lastNameTextController.text = user.lastName ?? '';
     _dobTextController.text = user.dob ?? '';
+    _gender = user.gender == null ? 1 : (int.tryParse(user.gender!) ?? 1);
     super.initState();
   }
 

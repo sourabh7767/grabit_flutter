@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grabit/providers/auth_provider.dart';
-import 'package:grabit/screens/login.dart';
-import 'package:grabit/screens/nav_screen.dart';
 import 'package:grabit/screens/otp_screen.dart';
 import 'package:grabit/screens/register.dart';
 import 'package:grabit/utils/push_notifications.dart';
@@ -13,6 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart';
+import 'screens/login.dart';
+import 'screens/nav_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

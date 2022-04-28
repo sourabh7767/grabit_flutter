@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:grabit/utils/storage.dart';
+
 class User {
   User(
       {required this.email,
@@ -31,11 +33,11 @@ class User {
         phoneNumber: json["phone_number"],
         username: json["username"],
         id: json["id"],
-        token: json["token"],
+        token: json["token"] ?? sharedPrefs.userData?.token,
         firstName: json["first_name"],
         lastName: json["last_name"],
         dob: json["dob"],
-        gender: json["gender"],
+        gender: json["gender"] == null ? null : json["gender"].toString(),
       );
 
   Map<String, dynamic> toMap() => {
@@ -46,7 +48,7 @@ class User {
         "token": token,
         "first_name": firstName,
         "last_name": lastName,
-        "gender": dob,
+        "gender": gender,
         "dob": dob,
       };
 }

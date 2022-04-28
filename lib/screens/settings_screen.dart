@@ -32,124 +32,126 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: Stack(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              const SettingsTileWidget(
-                title: 'Account info',
-              ),
-              const SettingsTileWidget(
-                title: 'Saved addresses',
-              ),
-              const SettingsTileWidget(
-                title: 'Saved cards',
-              ),
-              const SettingsTileWidget(
-                title: 'Change email',
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (c) => ChangePasswordScreen()));
-                },
-                child: const SettingsTileWidget(
-                  title: 'Change password',
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 30,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: SizedBox(
-                  height: 50,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Notifications',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                const SettingsTileWidget(
+                  title: 'Account info',
+                ),
+                const SettingsTileWidget(
+                  title: 'Saved addresses',
+                ),
+                const SettingsTileWidget(
+                  title: 'Saved cards',
+                ),
+                const SettingsTileWidget(
+                  title: 'Change email',
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (c) => ChangePasswordScreen()));
+                  },
+                  child: const SettingsTileWidget(
+                    title: 'Change password',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: SizedBox(
+                    height: 50,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Notifications',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        Switch(
-                          value: value1,
-                          onChanged: (value) {
-                            setState(() {
-                              value1 = value;
-                            });
-                          },
-                          activeColor: primaryColor,
-                        ),
-                      ],
+                          Switch(
+                            value: value1,
+                            onChanged: (value) {
+                              setState(() {
+                                value1 = value;
+                              });
+                            },
+                            activeColor: primaryColor,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const Divider(
-                indent: 1,
-                endIndent: 1,
-                color: Colors.grey,
-                thickness: 1,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text(
-                      'Language',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      'English',
-                      style: TextStyle(color: primaryColor, fontSize: 12),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text(
-                      'Country',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      'Egypt',
-                      style: TextStyle(color: primaryColor, fontSize: 12),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    InkWell(
-                      onTap: logout,
-                      child: Text(
-                        'Logout',
-                        style: TextStyle(color: primaryColor, fontSize: 15),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                  ],
+                const Divider(
+                  indent: 1,
+                  endIndent: 1,
+                  color: Colors.grey,
+                  thickness: 1,
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        'Language',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        'English',
+                        style: TextStyle(color: primaryColor, fontSize: 12),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        'Country',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        'Egypt',
+                        style: TextStyle(color: primaryColor, fontSize: 12),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      InkWell(
+                        onTap: logout,
+                        child: Text(
+                          'Logout',
+                          style: TextStyle(color: primaryColor, fontSize: 15),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           if (loading)
             Container(
