@@ -9,6 +9,7 @@ import '../constants.dart';
 import '../data/data.dart';
 import '../widgets/categories.dart';
 import '../widgets/content_list.dart';
+import '../widgets/content_list_near_by_me.dart';
 import '../widgets/restaurant_carousel.dart';
 import 'all_restaurant_screen.dart';
 import 'notifications_screen.dart';
@@ -21,6 +22,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+  void initState() {
+    Provider.of<HomeProvider>(context, listen: false).getData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Home Screen'),
         centerTitle: true,
         backgroundColor: primaryColor,
+        automaticallyImplyLeading: false,
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -51,10 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: SafeArea(
-        child: ChangeNotifierProvider(
-            create: (context) => HomeProvider()..getData(),
-            builder: (context, child) {
-              final provider = context.watch<HomeProvider>();
+        child: Consumer<HomeProvider>(builder: (context, provider, child) {
 
               return Stack(
                 children: [
@@ -120,12 +126,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ContentList(
                           title: 'Hot Right Now',
                           contentList: food,
+                          isFrom: 'hot_right',
                         ),
                       ),
                       SliverToBoxAdapter(
-                        child: ContentList(
+                        child: ContentListNearByMe(
                           title: 'Near me',
-                          contentList: food,
+                          // contentList: nearByMe,
                         ),
                       ),
                       SliverToBoxAdapter(

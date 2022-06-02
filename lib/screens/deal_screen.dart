@@ -149,7 +149,7 @@ class DealScreen extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: ContentList(
                     title: 'Hot Deals',
-                    contentList: food,
+                    contentList: food,isFrom: "",
                   ),
                 ),
 

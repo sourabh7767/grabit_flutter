@@ -1,21 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:grabit/models/home_list_model.dart';
+import 'package:grabit/providers/home_provider.dart';
+import 'package:grabit/screens/hot_right_now_detail_screen.dart';
+import 'package:grabit/utils/api.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../models/content_model.dart';
 import '../screens/item_tap.dart';
 
-
 class ContentList extends StatefulWidget {
   final String title;
+  final String isFrom;
   final List<Content> contentList;
 
-
-   ContentList({
+  ContentList({
+    required this.isFrom,
     Key? key,
     required this.title,
+
     required this.contentList,
 
   }) : super(key: key);
@@ -29,7 +35,10 @@ class _ContentListState extends State<ContentList> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    final hotDeal = context.watch<HomeProvider>().homeData.data?.hotDeal??[];
+    // final itemBaseUrl = context.read<HomeProvider>().homeData.itemBaseUrl;
+    // final contentList = context.read<HomeProvider>().homeData.hotDeal;
+    return hotDeal.length>0?Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,23 +66,32 @@ class _ContentListState extends State<ContentList> {
           SizedBox(
             height: 175,
             child: ListView.builder(
-
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemCount: widget.contentList.length,
+                itemCount: hotDeal.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final Content content = widget.contentList[index];
+                  final HotDeal content = hotDeal[index];
                   return GestureDetector(
                     onTap: () {
                       showCupertinoModalPopup(
                           context: context,
-                          builder: (context) =>
-                              ItemTap(title: content.name,location: content.location.toString(),imageUrl:content.imageUrl.toString() ,phone:content.phone.toString() ,meal:content.meal.toString() ,));
-
-
-
+                          builder: (context) =>widget.isFrom.isNotEmpty&&widget.isFrom=='hot_right'?HotRightNowScreen(
+                            title: content.bundleName!,
+                            location: "",
+                            imageUrl:urls.notiImageUrl+ content.img.toString(),
+                            phone: "123456789",
+                            meal: "",
+                            id: content.id.toString(),
+                          ): ItemTap(
+                                title: content.bundleName!,
+                                location: "",
+                                imageUrl:urls.notiImageUrl+ content.img.toString(),
+                                phone: "content.phone.toString()",
+                                meal: "content.meal.toString()",
+                            id: content.id.toString(),
+                              ));
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -84,7 +102,7 @@ class _ContentListState extends State<ContentList> {
                         shape: BoxShape.rectangle,
                         child: SizedBox(
                           height: 120,
-                          width: 300,
+                          width: 320,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -94,91 +112,96 @@ class _ContentListState extends State<ContentList> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   image: DecorationImage(
-                                      image:
-                                          AssetImage(content.imageUrl.toString()),
+                                      image: NetworkImage(
+                                          urls.itemsUrl + content.img.toString()),
                                       fit: BoxFit.fitHeight,
                                       alignment: Alignment.centerLeft),
                                 ),
                               ),
-                              SizedBox(width: 5,),
+                              SizedBox(
+                                width: 5,
+                              ),
                               Expanded(
-
                                 child: Padding(
-                                  padding:
-                                  const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
                                   child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                children: [
-                                  SizedBox(height: 10,),
-                                  Text(
-                                    content.name,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 15,
-                                    ),
-                                    maxLines: 2,
-                                  ),
-                                  Text(
-                                    content.name,
-                                    style: const TextStyle(
-                                        color: Colors.grey, fontSize: 12),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      const Icon(
-                                        Iconsax.location5,
-                                        color: Colors.grey,
-                                        size: 15,
+                                      SizedBox(
+                                        height: 10,
                                       ),
                                       Text(
-                                        content.location.toString(),
+                                        content.bundleName!,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 15,
+                                        ),
+                                        maxLines: 2,
+                                      ),
+                                      Text(
+                                        content.bundleName!,
                                         style: const TextStyle(
                                             color: Colors.grey, fontSize: 12),
                                       ),
-                                    ],
-                                  ),
-                                  Text(
-                                    '\$135',
-                                    style: TextStyle(
-                                        color: priceColor,
-                                        decoration: TextDecoration.lineThrough,
-                                        fontSize: 13),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Iconsax.location5,
+                                            color: Colors.grey,
+                                            size: 15,
+                                          ),
+                                          Text(
+                                            content.storeDetails?.location??"",
+                                            style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 12),
+                                          ),
+                                        ],
+                                      ),
                                       Text(
-                                        '\$95',
+                                        '\$${content.price.toString()}',
                                         style: TextStyle(
                                             color: priceColor,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 25),
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                            fontSize: 13),
                                       ),
-                                      IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            isfav = !isfav;
-                                          });
-                                        },
-                                        icon: isfav
-                                            ? Icon(
-                                                FontAwesomeIcons.solidHeart,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '\$${content.totalAfterDiscount.toString()}',
+                                            style: TextStyle(
                                                 color: priceColor,
-                                              )
-                                            : Icon(
-                                                FontAwesomeIcons.heart,
-                                                color: priceColor,
-                                              ),
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 25),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                isfav = !isfav;
+                                              });
+                                            },
+                                            icon: isfav
+                                                ? Icon(
+                                                    FontAwesomeIcons.solidHeart,
+                                                    color: priceColor,
+                                                  )
+                                                : Icon(
+                                                    FontAwesomeIcons.heart,
+                                                    color: priceColor,
+                                                  ),
+                                          ),
+                                        ],
                                       ),
                                     ],
-                                  ),
-
-                                ],
                                   ),
                                 ),
                               ),
@@ -192,6 +215,6 @@ class _ContentListState extends State<ContentList> {
           ),
         ],
       ),
-    );
+    ):Container();
   }
 }

@@ -9,7 +9,6 @@ import 'cart_screen.dart';
 import 'home_screen.dart';
 import 'order_screen.dart';
 
-
 class NavScreen extends StatefulWidget {
   const NavScreen({Key? key}) : super(key: key);
 
@@ -19,10 +18,10 @@ class NavScreen extends StatefulWidget {
 
 class _NavScreenState extends State<NavScreen> {
   final List<Widget> screens = [
-    const HomeScreen(),
-    const OrderScreen(),
-    const AccountScreen(),
-     SettingsScreen(),
+    HomeScreen(),
+    OrderScreen(),
+    AccountScreen(),
+    SettingsScreen(),
   ];
   final Map<String, IconData> _icons = const {
     'Home': Iconsax.home,
@@ -36,25 +35,21 @@ class _NavScreenState extends State<NavScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: GestureDetector(
-        onTap: (){
+        onTap: () {
           showCupertinoModalPopup(
-              context: context,
-              builder: (context) =>
-                   CartScreen());
-
+              context: context, builder: (context) => CartScreen());
         },
         child: PhysicalModel(
           color: primaryColor,
           shape: BoxShape.circle,
           elevation: 10,
           shadowColor: primaryColor,
-
           child: Container(
-            child: const Icon(Iconsax.shopping_cart,color: Colors.white,size: 30),
+            child: const Icon(Iconsax.shopping_cart,
+                color: Colors.white, size: 30),
             decoration: BoxDecoration(
               color: primaryColor,
               shape: BoxShape.circle,
-
             ),
             height: 50,
             width: 50,
@@ -68,7 +63,6 @@ class _NavScreenState extends State<NavScreen> {
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0,
         showSelectedLabels: true,
-
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.blue.shade100,
         items: _icons

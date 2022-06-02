@@ -1,7 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:grabit/models/StoreDetailModel.dart';
 import 'package:grabit/models/home_list_model.dart';
 import 'package:grabit/providers/get_all_stores_provider.dart';
+import 'package:grabit/widgets/content_list_store.dart';
+import 'package:grabit/widgets/empty_data.dart';
+import 'package:grabit/widgets/show_loader.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
@@ -10,9 +14,23 @@ import '../data/data.dart';
 import '../utils/api.dart';
 import '../widgets/content_list.dart';
 
-class VendorProfile extends StatelessWidget {
-  final StoreModel store;
-  const VendorProfile({Key? key, required this.store}) : super(key: key);
+class VendorProfile extends StatefulWidget {
+  final int id;
+
+  const VendorProfile({Key? key,required this.id}) : super(key: key);
+
+  @override
+  State<VendorProfile> createState() => _VendorProfileState();
+}
+
+class _VendorProfileState extends State<VendorProfile> {
+
+  @override
+  void initState() {
+    Provider.of<GetAllStoresProvider>(context, listen: false).getStore(widget.id);
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -20,35 +38,31 @@ class VendorProfile extends StatelessWidget {
       backgroundColor: scaffoldbgColor,
       appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       extendBodyBehindAppBar: true,
-      body: ChangeNotifierProvider(
-          create: (context) => GetAllStoresProvider()..getStore(store.id),
-          builder: (context, child) {
-            final GetAllStoresProvider provider = context.watch();
+      body: Consumer<GetAllStoresProvider>(builder: (context, provider, child) {
             if (provider.loading) {
-              return Center(child: CircularProgressIndicator());
-            } else if (provider.storeDetail == null) {
+              return ShowLoader();
+            } else if (provider.storeDetailModel == null) {
               return SizedBox();
             }
-            return CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                SliverToBoxAdapter(
-                  child: CachedNetworkImage(
-                    imageUrl: urls.storeImageUrl + store.logo,
+            print("data  ${provider.storeDetailModel!.data}");
+            return provider.storeDetailModel!.data!=null ? SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: urls.storeImageUrl + (provider.storeDetailModel?.data?.logo??""),
                     width: double.infinity,
                     height: MediaQuery.of(context).size.height * 0.30,
                     fit: BoxFit.cover,
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
+                  Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${store.region}, ${store.location}',
+                          '${provider.storeDetailModel!.data!.region}, ${provider.storeDetailModel!.data!.location}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
@@ -62,9 +76,7 @@ class VendorProfile extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
+                  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,7 +114,7 @@ class VendorProfile extends StatelessWidget {
                                 size: 25,
                               ),
                               Text(
-                                '${store.location}',
+                                '${provider.storeDetailModel!.data!.location}',
                                 style: TextStyle(
                                     color: primaryColor,
                                     fontWeight: FontWeight.bold),
@@ -124,7 +136,7 @@ class VendorProfile extends StatelessWidget {
                                 color: primaryColor,
                               ),
                               Text(
-                                '${store.phone}',
+                                '${provider.storeDetailModel!.data!.phone}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: primaryColor,
@@ -139,33 +151,20 @@ class VendorProfile extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: ContentList(
-                    title: 'Hot Deals',
-                    contentList: food,
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: ContentList(
-                    title: 'Pastries',
-                    contentList: food,
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: ContentList(
-                    title: 'Pizza',
-                    contentList: food,
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: ContentList(
-                    title: 'Bakery Items',
-                    contentList: food,
-                  ),
-                ),
-              ],
-            );
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: provider.storeDetailModel?.data?.categoryItems?.length??0,
+                      itemBuilder: (context,index){
+                        CategoryItems? items = provider.storeDetailModel?.data?.categoryItems![index];
+                        return  ContentListStore(
+                          title: items!.title.toString(),
+                          contentList: items.data??[],
+                        );
+                      })
+                ],
+              ),
+            ):showEmptyImage(context);
           }),
     );
   }

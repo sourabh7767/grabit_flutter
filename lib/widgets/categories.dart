@@ -17,8 +17,9 @@ class Categories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categories = context.watch<HomeProvider>().homeData.categoryList;
-    return Column(
+    final categories = context.watch<HomeProvider>().homeData.data?.categoryList??[];
+    final storeBaseUrl = context.watch<HomeProvider>().homeData.storeBaseUrl;
+    return categories.length>0? Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
@@ -56,7 +57,8 @@ class Categories extends StatelessWidget {
                     showCupertinoModalPopup(
                         context: context,
                         builder: (context) => CategoryScreen(
-                              title: content.categoryName,
+                              title: content.categoryName!,
+                          id: content.id.toString(),
                             ));
                   },
                   child: Padding(
@@ -73,7 +75,7 @@ class Categories extends StatelessWidget {
                             height: 110,
                             width: 110,
                             fit: BoxFit.cover,
-                            imageUrl: urls.imageBaseUrl + content.img,
+                            imageUrl: urls.imageBaseUrl + content.img!,
                           ),
                         ),
                         Positioned.fill(
@@ -84,7 +86,7 @@ class Categories extends StatelessWidget {
                             ),
                             alignment: Alignment.center,
                             child: Text(
-                              content.categoryName,
+                              content.categoryName!,
                               textAlign: TextAlign.center,
                               style: GoogleFonts.poppins(
                                 color: Colors.white,
@@ -103,6 +105,6 @@ class Categories extends StatelessWidget {
               }),
         ),
       ],
-    );
+    ):Container();
   }
 }

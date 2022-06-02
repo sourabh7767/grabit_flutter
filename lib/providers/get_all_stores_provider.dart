@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:grabit/models/AllStroreModel.dart';
+import 'package:grabit/models/StoreDetailModel.dart';
 import 'package:grabit/models/home_list_model.dart';
 import 'package:grabit/utils/api.dart';
 import 'package:http/http.dart';
@@ -11,8 +13,9 @@ import '../utils/storage.dart';
 class GetAllStoresProvider with ChangeNotifier {
   var loading = false;
 
-  List<StoreModel> stores = [];
-  StoreModel? storeDetail;
+  AllStoreModel allStoreModel =AllStoreModel();
+
+  StoreDetailModel? storeDetailModel=StoreDetailModel();
 
   void getStores() async {
     loading = true;
@@ -24,10 +27,8 @@ class GetAllStoresProvider with ChangeNotifier {
         'Authorization': 'Bearer ${sharedPrefs.userData?.token}'
       });
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body)['data'];
-        if (data is List) {
-          this.stores = data.map((e) => StoreModel.fromJson(e)).toList();
-        }
+        final data = jsonDecode(response.body);
+        allStoreModel = AllStoreModel.fromJson(data);
       }
     } catch (e) {}
 
@@ -46,9 +47,11 @@ class GetAllStoresProvider with ChangeNotifier {
         'Authorization': 'Bearer ${sharedPrefs.userData?.token}'
       });
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body)['data'];
+        final data = jsonDecode(response.body);
+        print("data ${data}");
 
-        storeDetail = StoreModel.fromJson(data);
+        storeDetailModel = StoreDetailModel.fromJson(data);
+        print("data ${storeDetailModel!.data}");
       }
     } catch (e) {}
 

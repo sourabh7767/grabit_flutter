@@ -28,4 +28,9 @@ class SharedPrefs {
       prefs.setString('fbtoken', val);
     }
   }
+
+
+  clearData(){
+    prefs.clear();
+  }
 }

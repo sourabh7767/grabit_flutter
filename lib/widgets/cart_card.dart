@@ -71,7 +71,7 @@ class _CartCardState extends State<CartCard> {
                             Text(widget.counter.toString()),
                             GestureDetector(
                               onTap: () => setState(() {
-                                widget.counter --;
+                                widget.counter!=0? widget.counter --:0;
                               }),
                               child: const Icon(
                                 EvaIcons.minus,
@@ -111,7 +111,7 @@ class _CartCardState extends State<CartCard> {
                                   fontSize: 20),
                             ),
                             Text(
-                              '${widget.price}E£',
+                              '\$${widget.price}',
                               style: TextStyle(
                                   color: Colors.green.shade800,
                                   fontWeight: FontWeight.bold,

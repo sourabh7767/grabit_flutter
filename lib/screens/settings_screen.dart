@@ -164,6 +164,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void logout() async {
+
     loading = true;
     setState(() {});
     try {
@@ -177,7 +178,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Fluttertoast.showToast(msg: res['message']);
         }
         if (res['success'] == true) {
-          sharedPrefs.userData = null;
+          sharedPrefs.clearData();
           Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
         }
       }

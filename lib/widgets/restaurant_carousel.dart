@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:grabit/models/home_list_model.dart';
 import 'package:grabit/providers/home_provider.dart';
 import 'package:grabit/utils/api.dart';
 
@@ -15,8 +16,9 @@ class RestaurantCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brands = context.read<HomeProvider>().homeData.nearByStore;
-    return Column(
+    final brands = context.read<HomeProvider>().homeData.data?.nearByStore??[];
+    final storeBaseUrl = context.read<HomeProvider>().homeData.storeBaseUrl;
+    return brands.length>0? Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
@@ -38,12 +40,12 @@ class RestaurantCarousel extends StatelessWidget {
             itemCount: brands.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (BuildContext context, int index) {
-              final content = brands[index];
+              var content = brands[index];
               return GestureDetector(
                 onTap: () {
                   showCupertinoModalPopup(
                       context: context,
-                      builder: (context) => VendorProfile(store: content));
+                      builder: (context) => VendorProfile(id: content.id!));
                 },
                 child: Column(
                   children: [
@@ -55,12 +57,12 @@ class RestaurantCarousel extends StatelessWidget {
                           height: 90,
                           width: 90,
                           fit: BoxFit.cover,
-                          imageUrl: urls.storeImageUrl + content.logo,
+                          imageUrl: storeBaseUrl! + content.logo!,
                         ),
                       ),
                     ),
                     Text(
-                      content.enName,
+                      content.enName!,
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.w500),
                     ),
@@ -71,6 +73,6 @@ class RestaurantCarousel extends StatelessWidget {
           ),
         ),
       ],
-    );
+    ):Container();
   }
 }

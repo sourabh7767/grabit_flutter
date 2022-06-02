@@ -1,13 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:grabit/models/OrderListModel.dart';
+import 'package:grabit/utils/api.dart';
+import 'package:intl/intl.dart';
 
 import '../models/order_model.dart';
 import '../screens/order_details_screen.dart';
 
 
 class OrderList extends StatefulWidget {
-  final List<MyOrders> orderList;
+  final List<OrdersData> orderList;
 
   const OrderList({Key? key, required this.orderList}) : super(key: key);
 
@@ -24,13 +28,18 @@ class _OrderListState extends State<OrderList> {
         itemCount: widget.orderList.length,
         shrinkWrap: true,
         itemBuilder: (BuildContext context, int index) {
-          final MyOrders orders = widget.orderList[index];
-          return GestureDetector(
+          final OrdersData orders = widget.orderList[index];
+
+          String status = orders.status==0?'Canceled':
+          orders.status==1?'Waiting':
+          orders.status==2?'Accepted':
+          orders.status==3?'On Deliver':'done';
+          return InkWell(
             onTap: () {
               showCupertinoModalPopup(
                   context: context,
                   builder: (context) =>
-                      OrderDetails(orderDetails: orders));
+                      OrderDetails(id: orders.id.toString()));
             },
             child: Container(
               height: 130,
@@ -52,9 +61,11 @@ class _OrderListState extends State<OrderList> {
                         decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                                image: AssetImage(orders.imageUrl),
-                                fit: BoxFit.cover)),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImage(imageUrl: Urls().itemsUrl+orders.items![0].itemDetails!.img!,fit: BoxFit.cover,),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 10),
@@ -62,28 +73,30 @@ class _OrderListState extends State<OrderList> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              orders.name,
+                              orders.items![0].itemType==0?
+                              orders.items![0].itemDetails?.enItemName??"":
+                              orders.items?[0].itemDetails?.bundleName??"",
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15),
                             ),
                             Text(
-                              orders.status,
+                              status,
                               style: TextStyle(
                                   color: Colors.green.shade800,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12),
                             ),
                             Text(
-                              orders.date,
+                                DateFormat("yyyy-MM-dd").parse(orders.createdAt!).toString(),
                               style: const TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12),
                             ),
                             Text(
-                              'OrderId : ${orders.orderId}',
+                              'OrderId : ${orders.id}',
                               style: const TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w600,

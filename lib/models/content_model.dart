@@ -7,6 +7,7 @@ class Content {
   final String? phone;
   final String? date;
   final String? meal;
+  final String? price;
 
   const Content({
     required this.name,
@@ -16,6 +17,7 @@ class Content {
     this.phone,
     this.date,
     this.meal,
+    this.price
 
   });
 }

@@ -29,6 +29,7 @@ class _NotificationListState extends State<NotificationList> {
                         location: "notification.location",
                         phone: "notification.phone",
                         meal: '${"notification.meal"}',
+                    id: "1",
                       ));
             },
             child: Column(

@@ -1,4 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:grabit/models/OrderDetailModel.dart';
+import 'package:grabit/utils/api.dart';
+import 'package:intl/intl.dart';
 
 import '../models/order_model.dart';
 
@@ -8,10 +12,16 @@ class OrderHeaderCard extends StatelessWidget {
     required this.orderDetails,
   }) : super(key: key);
 
-  final MyOrders orderDetails;
+  final Data orderDetails;
 
   @override
   Widget build(BuildContext context) {
+
+    String status = orderDetails.status==0?'Canceled':
+    orderDetails.status==1?'Waiting':
+    orderDetails.status==2?'Accepted':
+    orderDetails.status==3?'On Deliver':'done';
+
     return Container(
       height: 127,
       decoration: const BoxDecoration(
@@ -34,9 +44,11 @@ class OrderHeaderCard extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                            image: AssetImage(orderDetails.imageUrl),
-                            fit: BoxFit.cover)),
+                       ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: CachedNetworkImage(imageUrl: Urls().itemsUrl+orderDetails.items![0].itemDetails!.img!,fit: BoxFit.cover,),
+                    ),
                   ),
                   const SizedBox(width: 30,),
                   Padding(
@@ -45,26 +57,28 @@ class OrderHeaderCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          orderDetails.name,
+                          orderDetails.items![0].itemType==0?
+                          orderDetails.items![0].itemDetails?.enItemName??"":
+                          orderDetails.items?[0].itemDetails?.bundleName??"",
                           style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 20),
                         ),
                         Text(
-                          orderDetails.status,
+                          status,
                           style: TextStyle(
                               color: Colors.green.shade800,
                               fontWeight: FontWeight.bold,fontSize: 12),
                         ),
                         Text(
-                          orderDetails.date,
+                          DateFormat("yyyy-MM-dd").parse(orderDetails.createdAt!).toString(),
                           style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.w600,fontSize: 12),
                         ),
                         Text(
-                          'OrderId : ${orderDetails.orderId}',
+                          'OrderId : ${orderDetails.id}',
                           style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.w600,fontSize: 12),
